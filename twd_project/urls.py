@@ -21,6 +21,7 @@ from rango import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^/rango/about/', views.about),
+    url(r'^about/$', views.about),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/$', views.show_category,name='show_category'),
     url(r'^admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
