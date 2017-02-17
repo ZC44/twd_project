@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
     <head>
@@ -7,18 +8,21 @@
     </head>
 
     <body>
+
         <div>
             {% if category %}
-            <h1>{{ category.name }}</h1>
-            {% if pages %}
-            <ul>
-                {% for page in pages %}
-                <li><a href = "">{{ page.title }}</a>{% endfor %}</li>
-            </ul>
-            <strong>No pages currently in category.</strong>
+                <h1>{{ category.name }}</h1>
+                {% if pages %}
+                    <ul>
+                        {% for page in pages %}
+                            <li><a href = "">{{ page.title }}</a>{% endfor %}</li>
+                    </ul>
+                    <strong>No pages currently in category.</strong>
+                {% endif %}
+                {% else %} The specified category does not exist!
             {% endif %}
-            {% else %} The specified category does not exist!
         </div>
+
     </body>
 
 </html>
