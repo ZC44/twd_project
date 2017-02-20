@@ -38,4 +38,4 @@ class UserProfile(models.Model):
         return self.user.username
 
     def __unicode__(self):
-        return self.user.usernameS
+        return self.user.username
