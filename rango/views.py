@@ -1,6 +1,9 @@
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from rango.models import Category,Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from django.contrib.auth import authenticate, login
+from django.core.urlresolvers import reverse
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
@@ -26,21 +29,15 @@ def show_category(request,category_name_slug):
 
 def add_category(request):
     form = CategoryForm()
-    # A HTTP POST?
     if request.method == 'POST':
         form = CategoryForm(request.POST)
-        # Have we been provided with a valid form?
         if form.is_valid():
-            # Save the new category to the database.
             form.save(commit=True)
-            # Now that the category is saved
-            # We could give a confirmation message
-            # But since the most recent category added is on the index page
-            # Then we can direct the user back to the index page.
+            # Now that the category is saved, give a confirmation message
+            # Since the most recent category added is on the index page direct the user back to the index page.
             return index(request)
         else:
-            # The supplied form contained errors -
-            # just print them to the terminal.
+            # The supplied form contained errors - just print them to the terminal.
             print(form.errors)
     # Will handle the bad form, new form, or no form supplied cases.
     # Render the form with error messages (if any).
@@ -89,3 +86,20 @@ def register(request):
     return render(request,'rango/register.html',{'user_form': user_form,
                                                  'profile_form': profile_form,
                                                  'registered': registered})
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                return HttpResponse("Your Rango account is disabled.")
+        else:
+            print("Invalid login details: {0}, {1}".format(username, password))
+            return HttpResponse("Invalid login details supplied.")
+    else:
+        return render(request, 'rango/login.html', {})
