@@ -13,14 +13,12 @@ def index(request):
     page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'categories':category_list,'pages':page_list}
 
-    visitor_cookie_handler(request)
-    context_dict['visits'] = request.session['visits']
-
     response = render(request, 'rango/index.html', context = context_dict)
     return response
 
 def about(request):
     context_dict = {}
+    visitor_cookie_handler(request)
     context_dict['visits'] = request.session['visits']
     response = render(request,'rango/about.html', context = context_dict)
     return response
